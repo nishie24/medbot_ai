@@ -1,25 +1,42 @@
 # 🧬 MedBot AI
 
-**MedBot AI** is an AI-powered medical assistant that offers:
-- 🩺 **Symptom Diagnosis** based on selected symptoms
-- 🧠 **Medical Q&A** using RAG (Retrieval-Augmented Generation) with Gemini 
-- 🔍 Built with LangChain, FAISS, and Gemini 1.5 Flash
-- 📚 Backed by medical data from MedlinePlus and a general medical encyclopedia
+**MedBot AI** is an intelligent, AI‑powered medical assistant that provides:
+- 🧠 **Medical Q&A** via Gemini + LangChain RAG  
+- 🩺 **Symptom-Based Disease Prediction** using a weighted rule-based engine  
+- 🔍 Powered by LangChain, FAISS, and Gemini 1.5 Flash  
+- 📚 Medical data from MedlinePlus XML and a PDF medical encyclopedia  
 
 ---
 
 ## 🚀 Features
 
-### 1. Symptom Diagnosis
-- Select one or more symptoms from a dynamic list
-- Predicts top 3 most probable diseases using a custom rule-based matcher (Jaccard, coverage, precision weighted)
-- Enhanced with Gemini Agent fallback (LangChain agent)
+### Symptom Diagnosis
+- Select **one or more symptoms** from the dropdown  
+- Returns top 3 likely diseases using this score:
+  ```
+  0.4 × Jaccard + 0.4 × Coverage + 0.2 × Precision
+  ```
+- If exact matches exist, only those appear  
 
-### 2. Medical Q&A
+### Medical Q&A (RAG-Based)
 - Ask natural language medical questions
-- Uses Gemini 1.5 Flash + LangChain RAG
-- Retrieves context from medical datasets (MedlinePlus + PDF encyclopedia)
-- Shows AI response and reference documents used
+- Gemini retrieves context from:
+  - MedlinePlus XML topics  
+  - Encyclopedia PDF content  
+- Provides grounded answers with reference citations
+
+---
+
+## 🧠 Tech Stack
+
+| Component     | Technology                              |
+|---------------|------------------------------------------|
+| UI            | Streamlit                               |
+| LLM           | Gemini 1.5 Flash (`google-generativeai`)|
+| RAG           | LangChain + FAISS                       |
+| Embeddings    | `all-MiniLM-L6-v2` (SentenceTransformer)|
+| Agent         | LangChain Tool + Structured Chat        |
+| Data Format   | MedlinePlus XML, Encyclopedia PDF, CSV  |
 
 ---
 
@@ -27,66 +44,64 @@
 
 ```
 medbot_ai/
-│
-├── app.py                      # Streamlit frontend for MedBot AI
-├── agent_runner.py            # LangChain agent for symptom diagnosis
-├── build_langchain_kb.py      # Index builder (MedlinePlus XML + PDF)
-├── requirements.txt           # Python dependencies
-│
+├── app.py
+├── agent_runner.py
+├── build_langchain_kb.py
+├── requirements.txt
+├── README.md
+├── .env                      # Add your API key here
+
 ├── data/
-│   └── disease_symptom.csv    # Rule-based symptoms dataset
-│
+│   ├── disease_symptom.csv
+│   ├── medlineplus_health_topics.zip  # download manually
+│   └── encyclopedia.pdf               # your medical encyclopedia PDF
+
 ├── prompts/
-│   └── prompt_templates.py    # Gemini RAG prompt templates
-│
+│   └── prompt_templates.py
+
 ├── utils/
-│   ├── rag_retriever.py       # LangChain retriever setup (FAISS + embeddings)
-│   ├── symptom_agent.py       # Symptom agent using LangChain Tool
-│   ├── symptom_checker.py     # Rule-based prediction logic
-│   └── text_utils.py          # Utility for text preprocessing
+│   ├── rag_retriever.py
+│   ├── symptom_agent.py
+│   ├── symptom_checker.py
+│   └── text_utils.py
+
+└── knowledge_base/
+    ├── index.faiss
+    └── index.pkl
 ```
 
 ---
 
-## 🔧 Setup Instructions
+## 🛠️ Installation & Setup
 
-1. **Install requirements**
 ```bash
+git clone https://github.com/nishie24/medbot_ai.git
+cd medbot_ai
 pip install -r requirements.txt
 ```
 
-2. **Add your Gemini API key**
-```bash
-# .env file
-GEMINI_API_KEY=your_key_here
+Create a `.env` file:
+```
+GEMINI_API_KEY=YOUR_GOOGLE_GEMINI_KEY
 ```
 
-3. **Prepare knowledge base**
+Place these files under `data/`:
+- `medlineplus_health_topics.zip`
+- `encyclopedia.pdf`
+
+Build the RAG index:
 ```bash
 python build_langchain_kb.py
 ```
 
-4. **Run the app**
+Run the app:
 ```bash
 streamlit run app.py
 ```
 
 ---
 
-## 🧠 Tech Stack
+## ⚠️ Disclaimer
 
-| Component | Technology |
-|----------|-------------|
-| UI       | Streamlit |
-| LLM      | Gemini 1.5 Flash (Google Generative AI) |
-| RAG      | LangChain + FAISS + SentenceTransformers |
-| Agent    | LangChain Tool + Structured Chat |
-| Embedding Model | all-MiniLM-L6-v2 |
-| Data     | MedlinePlus XML + Encyclopedia PDF + Symptom CSV |
-
-
-
-## ⚠ Disclaimer
-
-This tool is for **educational and academic use only**.
-Always consult certified healthcare professionals for medical concerns.
+This tool is for **educational and academic use only**.  
+Not intended for clinical use—always consult licensed healthcare professionals for medical advice.
