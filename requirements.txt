@@ -1,0 +1,14 @@
+streamlit
+pandas
+numpy
+requests
+tqdm
+python-dotenv
+PyPDF2
+sentence-transformers
+faiss-cpu
+google-generativeai
+langchain>=0.2.2
+langchain-community
+langchain-google-genai
+langchain-huggingface  
