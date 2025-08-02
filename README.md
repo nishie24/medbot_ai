@@ -98,6 +98,16 @@ Run the app:
 ```bash
 streamlit run app.py
 ```
+## 🖼️ Screenshots
+
+### 🏠 Homepage
+![Homepage UI](images/homepage.png)
+
+### 💬 Medical Q&A
+![Medical Q&A Demo](images/Q&A.png)
+
+### 🩺 Symptom Diagnosis
+![Symptom Diagnosis](images/Symptom.png)
 
 ---
 
